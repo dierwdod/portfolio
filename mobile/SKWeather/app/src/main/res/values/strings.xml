@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="sk_planet_api_key">ca325f85-0064-36cb-a7c3-137c0115f5d7</string>
+
+    <string name="setting">설정</string>
+    <string name="location">위치</string>
+
+    <string name="drawer_opener">열기</string>
+    <string name="drawer_closer">닫기</string>
+
+    <string-array name="current_icon_code">
+        <item>SKY_O00</item>
+        <item>SKY_O01</item>
+        <item>SKY_O02</item>
+        <item>SKY_O03</item>
+        <item>SKY_O04</item>
+        <item>SKY_O05</item>
+        <item>SKY_O06</item>
+        <item>SKY_O07</item>
+        <item>SKY_O08</item>
+        <item>SKY_O09</item>
+        <item>SKY_O10</item>
+        <item>SKY_O11</item>
+        <item>SKY_O12</item>
+        <item>SKY_O13</item>
+        <item>SKY_O14</item>
+    </string-array>
+    <string-array name="yesterday_icon_code">
+        <item>SKY_Y00</item>
+        <item>SKY_Y01</item>
+        <item>SKY_Y02</item>
+        <item>SKY_Y03</item>
+        <item>SKY_Y04</item>
+        <item>SKY_Y05</item>
+        <item>SKY_Y06</item>
+        <item>SKY_Y07</item>
+    </string-array>
+    <string-array name="tomorrow_icon_code">
+        <item>SKY_M00</item>
+        <item>SKY_M01</item>
+        <item>SKY_M02</item>
+        <item>SKY_M03</item>
+        <item>SKY_M04</item>
+        <item>SKY_M05</item>
+        <item>SKY_M06</item>
+        <item>SKY_M07</item>
+    </string-array>
+</resources>

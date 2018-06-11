@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LoginService</string>
+
+    <!-- facebook ID and Protocol -->
+    <string name="facebook_app_id">INPUT FACEBOOK APP ID</string>
+    <string name="fb_login_protocol_scheme">INPUT FACEBOOK LOGIN PROTOCOL_SCHEME</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+</resources>
