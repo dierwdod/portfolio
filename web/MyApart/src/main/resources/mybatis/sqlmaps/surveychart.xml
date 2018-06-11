@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.myapart.app.dao.SurveyChart">
+  	<resultMap type="com.myapart.app.model.SurveyChart" id="surveyChartResultMap">
+		<result column="birth" property="birth"/>
+		<result column="memCount" property="memberCount"/>
+		<result column="partiCount" property="partiCount"/>
+		<result column="sur_title" property="surTitle"/>
+		<result column="manCount" property="manCount"/>
+		<result column="womanCount" property="womanCount"/>
+	</resultMap>
+	<resultMap type="java.lang.String" id="birthResultMap">
+		<result column="birth" property=""/>
+	</resultMap>
+  	
+  	<select id="selectMemPartiCount" parameterType="int" resultMap="surveyChartResultMap">
+  		SELECT (SELECT count(*) 
+  					FROM member) as memCount, 
+			   (SELECT count(*) 
+		 			FROM member m JOIN survey_participation sp
+		 			ON m.id = sp.id
+		 			WHERE sp.sur_num = #{surNum}) as partiCount,
+			   sur_title
+		FROM survey
+		WHERE sur_num = #{surNum}
+  	</select>
+  	
+	<select id="selectGenderPartiCount" parameterType="int" resultMap="surveyChartResultMap">
+		SELECT (SELECT count(*)
+					FROM member m JOIN survey_participation sp
+					ON m.id = sp.id
+					WHERE m.gender='m'
+					and sp.sur_num = #{surNum}) as manCount,
+	   		   (SELECT count(*)
+					FROM member m JOIN survey_participation sp
+					ON m.id = sp.id
+					WHERE m.gender='f'
+					and sp.sur_num = #{surNum}) as womanCount,
+	   		   sur_title
+		FROM survey
+		WHERE sur_num=#{surNum}
+	</select>
+	
+	<select id="selectAgePartiList" parameterType="int" resultMap="birthResultMap">
+		SELECT birth
+		FROM member m JOIN survey_participation sp
+		ON m.id = sp.id
+		WHERE sur_num = #{surNum}
+	</select>
+	
+	<select id="selectSurveyTitle" parameterType="int" resultType="String">
+		SELECT sur_title
+		FROM survey
+		WHERE sur_num = #{surNum}
+	</select>	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

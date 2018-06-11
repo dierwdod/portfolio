@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.myapart.app.dao.ShopDao">
+	<resultMap type="com.myapart.app.model.Shop" id="shopResultMap">
+		<id column="shop_num" property="shopNum" />
+		<result column="shop_title" property="shopTitle" />
+		<result column="shop_contents" property="shopContents" />
+		<result column="shop_url" property="shopUrl" />
+		<result column="shop_date" property="shopDate"/>
+		<result column="shop_count" property="shopCount" />
+		<result column="id" property="id" />
+	</resultMap>
+	
+	<select id="selectShopList" parameterType="String" resultMap="shopResultMap"> <!--반환되는 object의 지칭이름 -->
+		SELECT shop_num, shop_url, shop_title, shop_contents, shop_date, shop_count, id
+		FROM shop
+		WHERE shop_title LIKE CONCAT('%',#{searchTitle},'%')
+		ORDER BY shop_num DESC
+		
+	</select>
+	
+ 	<update id="updateShopCount" parameterType="com.myapart.app.model.Shop">
+		UPDATE shop SET shop_count = #{shopCount}
+		WHERE shop_num=#{shopNum}
+	</update>
+
+	<insert id="insertShop" parameterType="com.myapart.app.model.Shop">
+		insert into shop values(null, #{shopTitle}, #{shopContents}, #{shopUrl}, now(),0,#{id})
+
+	</insert>
+
+	<select id="selectShopOne" parameterType="int" resultMap="shopResultMap">
+		SELECT *
+		FROM shop
+		WHERE shop_num=#{shop_num}
+	</select>
+
+	<update id="updateShop" parameterType="com.myapart.app.model.Shop">
+		UPDATE shop SET 
+			shop_title=#{shopTitle},
+			shop_contents=#{shopContents},
+			shop_url=#{shopUrl}
+		WHERE shop_num=#{shopNum}
+	</update>
+
+	<delete id="deleteShop" parameterType="int">
+		DELETE FROM shop WHERE shop_num=#{no}
+	</delete>
+	
+	<select id="selectShopCount" parameterType="int">
+		SELECT count(*)
+		FROM shop
+		WHERE shop_num = #{shopNum}
+	</select>
+	
+</mapper>

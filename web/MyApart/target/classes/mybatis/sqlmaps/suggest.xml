@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.myapart.app.dao.SuggestDao">
+
+	<resultMap type="com.myapart.app.model.Suggest" id="suggestResultMap">
+		<id column="sug_num" property="sugNum" />
+		<result column="sug_title" property="sugTitle" />
+		<result column="sug_contents" property="sugContents" />
+		<result column="sug_date" property="sugDate" />
+		<result column="sug_count" property="sugCount" />
+		<result column="id" property="id" />
+	</resultMap>
+	
+	<select id="selectSuggestList" parameterType="String" resultMap="suggestResultMap">
+		SELECT sug_num, sug_title, id, sug_date, sug_count 
+		FROM suggest 
+		WHERE sug_title LIKE CONCAT('%',#{keyword},'%')
+		ORDER BY sug_num DESC
+	</select>
+
+	<insert id="insertSuggest" parameterType="com.myapart.app.model.Suggest">
+		INSERT INTO	suggest(id,sug_title,sug_contents,sug_count,sug_date) 
+		VALUES (#{id},#{sugTitle},#{sugContents},0,now())
+	</insert>
+
+	<select id="selectSuggestOne" parameterType="int" resultMap="suggestResultMap">
+		SELECT sug_num,id,sug_title,sug_contents,sug_date 
+		FROM suggest
+		WHERE sug_num = #{no}
+	</select>
+
+	<update id="updateSuggestCount" parameterType="com.myapart.app.model.Suggest">
+		UPDATE suggest SET sug_count=#{sugCount}
+		WHERE sug_num=#{sugNum}
+		
+	</update>
+
+	<update id="updateSuggest" parameterType="com.myapart.app.model.Suggest">
+		UPDATE suggest SET
+			id=#{id}, 
+			sug_title=#{sugTitle},
+			sug_contents=#{sugContents},
+			sug_count=#{sugCount}, 
+			sug_date=now()
+		WHERE sug_num=#{sugNum}
+	</update>
+
+	<delete id="deleteSuggest" parameterType="int">
+		DELETE FROM suggest WHERE sug_num=#{value}
+	</delete>
+</mapper>

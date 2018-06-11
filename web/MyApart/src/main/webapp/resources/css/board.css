@@ -1,0 +1,131 @@
+@CHARSET "UTF-8";
+/* -----------------------브라우저 전체 적용 css---------------------- */
+/*---------------- 브라우저 영역---------------*/
+html, body {
+	height:100%;
+	margin:0px;
+	padding:0px;
+	background-color:#ffffff;
+	overflow-x:hidden;
+	overflow-y:auto;
+}		
+/*----------------------------------------*/
+/*---------------- Header 영역----------- --*/
+div.header {
+	position:relative;
+	top:0;
+	width:100%;
+}
+/* 헤더 상단 바 */
+div#header_top {
+	position:relative;
+	width:100%;
+	min-height:40px;
+	line-height:40px;
+	vertical-align:middle;
+	background-color:#006699;
+	text-align:right;
+}
+
+/* 헤더 로고 + 게시판 선택 */
+div#header_middle {
+position:inherit;
+	width:100%;
+	min-width:1050px;
+	height:100px;	
+}
+div#header_middle>a {
+	width:30%;
+	height:100%;
+	float:left;
+}
+div#header_middle>ul {
+	list-style:none;
+	width:100%;
+	height:100%;
+}
+div#header_middle>ul>li {
+	width:17%;
+	line-height:100px;
+	vertical-align:middle;
+	float:left;
+	text-align:center;
+	font-size:30px;
+}
+div#header_middle>ul>li>a {
+	text-decoration:none;
+	color:#000000;
+}
+
+/* 헤더 하단 이미지 */
+div#header_bottom {
+	position:relative;
+	top:20px;
+	width:100%;
+}
+/*----------------------------------------*/
+/*-------------- Contents 영역 -------------*/
+div.board {
+	position:relative;
+	top:40px;
+	bottom:20px;
+	min-width:50%;
+	border-radius:12px;
+	background-color:#eeeeee;
+}
+/*----------------------------------------*/
+/*-------------- Footer 영역 ---------------*/		
+div.footer {
+	background-color:#eeeeee;
+	position:relative;
+	top:80px;
+	width:100%;
+	height:150px;
+}
+div.footer>p {
+	position:inherit;
+	top:20px;
+	left:20px;	
+}
+/*----------------------------------------*/
+/*--------------------------------------------------------------*/
+
+/* ------------------------메인화면 (로그인 전)------------------------*/
+div#header_top>ul {
+	list-style:none;
+	margin:0 30px 0 0;
+	padding:0;
+	float:right;
+}	
+div#header_top>ul>li {
+	margin:0 10px 0 10px;
+	float:left;
+	color:white;
+}
+/*--------------------------------------------------------------*/
+
+/*------------------메인,공지,건의,장터,설문조사 (로그인 후)-----------------*/
+div#header_top>a {
+	text-decoration:none;
+	color:white;
+	margin-right:50px;
+}	
+/*--------------------------------------------------------------*/
+
+/*-------------------- 공지,건의,장터,설문조사(타이틀) -------------------*/
+div.board_title {
+	position:inherit;
+	top:20px;
+	width:90%;
+	min-width:860px;
+	height:70px;
+	margin-left:auto;
+	margin-right:auto;
+	background-color:#ffffff;
+	border-radius:12px;
+	line-height:70px;
+	vertical-align:middle;	
+}
+/*---------------------------------------------------------------*/
+		
+

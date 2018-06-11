@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.myapart.app.dao.SurveyDao">
+
+	<resultMap type="com.myapart.app.model.SurveyInfo" id="surveyInfoResultMap">
+		<id column="sur_num" property="surNum"/>
+		<result column="sur_title" property="surTitle"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="end_date" property="endDate"/>
+		<result column="name" property="name"/>
+		<result column="id" property="id"/>
+		<result column="dong" property="dong"/>
+		<result column="parti_date" property="partiDate"/>
+	</resultMap>
+
+	<resultMap type="com.myapart.app.model.SurveyQuestion" id="surveyQstResultMap">
+		<id column="quest_num" property="questNum"/>
+		<result column="quest_title" property="questTitle"/>
+		<result column="quest_type" property="questType"/>
+	</resultMap>
+
+	<resultMap type="com.myapart.app.model.SurveyParticipation" id="surveyPartiResultMap">
+		<id column="parti_num" property="partiNum"/>
+		<result column="parti_date" property="partiDate"/>
+		<result column="id" property="id"/>
+		<result column="sur_num" property="surNum"/>	
+	</resultMap>
+
+	<resultMap type="com.myapart.app.model.SurveyAnswer" id="surveyAnsResultMap">
+		<id column="ans_num" property="ansNum"/>
+		<result column="ans_title" property="ansTitle"/>
+		<result column="ans_contents" property="ansContents"/>
+		<result column="ans_type" property="ansType"/>
+		<result column="parti_date" property="partiDate"/>
+	</resultMap>
+	
+	
+	<select id="selectSurveyList" resultMap="surveyInfoResultMap" parameterType="String">
+		SELECT s.sur_num, s.sur_title, s.reg_date, s.end_date, ad.name
+		FROM survey s JOIN admin ad
+		ON s.id = ad.id
+		<if test="value != null">
+			WHERE s.sur_title LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		ORDER BY s.sur_num DESC 
+	</select>
+	
+	<select id="selectSignedSurveyList" resultMap="surveyInfoResultMap" parameterType="String">
+		SELECT s.sur_num, s.sur_title, s.reg_date, m.id, m.dong, sp.parti_date
+		from survey s JOIN survey_participation sp 
+			ON s.sur_num = sp.sur_num
+        INNER JOIN admin ad
+			ON s.id = ad.id
+        INNER JOIN member m
+			ON m.id = sp.id
+		<if test="value != null">
+			WHERE s.sur_title like CONCAT('%',#{keyword},'%')
+		</if>
+		ORDER BY s.sur_num DESC 
+	</select>
+	
+  	<insert id="insertSurvey" parameterType="com.myapart.app.model.SurveyInfo">
+		INSERT INTO survey (sur_title, reg_date, end_date, id)
+		VALUES (#{surTitle}, now(), date_add(now(), interval 2 day), #{id})
+	</insert>
+	
+	<insert id="insertSurveyQuestion" parameterType="map">
+		INSERT INTO survey_question VALUES
+		<foreach collection="qstList" item="item" separator=" , ">
+			(null,#{item.questTitle},#{item.questType}, #{item.surNum})
+		</foreach>
+	</insert>
+	
+	<update id="updateSurvey" parameterType="com.myapart.app.model.SurveyInfo">
+		UPDATE survey SET sur_title = #{surTitle}
+		WHERE sur_num = #{surNum}
+	</update>
+	<update id="updateSurveyQuestion" parameterType="map">
+		UPDATE survey_question SET
+		quest_title = CASE
+		<foreach collection="updList" item="item" separator=" ">
+			WHEN quest_num=#{item.questNum} THEN #{item.questTitle}			
+		</foreach>	
+		END where sur_num=#{surNum}
+	</update>
+	
+	<select id="surveyQuestionnarieHeader" resultMap="surveyInfoResultMap" parameterType="int">
+		SELECT s.sur_num, s.sur_title, s.reg_date, s.end_date, ad.name
+		FROM survey s JOIN admin ad
+		ON s.id = ad.id
+		WHERE s.sur_num=#{num}
+	</select>
+	<select id="surveyQuestionnarieContents" resultMap="surveyQstResultMap" parameterType="int">
+		SELECT sq.quest_num, sq.quest_title, sq.quest_type
+		FROM survey s JOIN survey_question sq
+		ON s.sur_num = sq.sur_num
+		WHERE s.sur_num=#{num}
+	</select>
+	
+	<insert id="insertParticipation" parameterType="com.myapart.app.model.SurveyParticipation">
+		INSERT INTO survey_participation VALUES (null, now(), #{id}, #{surNum})
+	</insert>
+	
+	<select id="participationNumber" resultType="int" parameterType="com.myapart.app.model.SurveyParticipation">
+		SELECT parti_num
+		FROM survey_participation
+		WHERE id=#{id}
+		AND sur_num=#{surNum}
+	</select>
+	<insert id="insertSurveyAnswer" parameterType="map">
+		INSERT INTO survey_answer VALUES
+		<foreach collection="ansList" item="item" separator=" , ">
+			(null, #{item.ansTitle},#{item.ansContents},#{item.ansType},#{item.partiNum})
+		</foreach>
+	</insert>
+	
+	<select id="selectAnswerList" resultMap="surveyAnsResultMap" parameterType="com.myapart.app.model.SurveyInfo">
+		SELECT sp.parti_date, sa.ans_num, sa.ans_title, sa.ans_contents
+		FROM survey_participation sp JOIN survey_answer sa
+		ON sp.parti_num = sa.parti_num
+		WHERE sp.sur_num = #{surNum}
+		AND sp.id = #{id}
+
+	</select>
+	
+	<select id="selectSurveyNonePartiList" resultMap="surveyInfoResultMap" parameterType="map">
+		SELECT s.sur_num, s.sur_title, s.reg_date, s.end_date, ad.name
+		FROM survey s JOIN admin ad
+		ON s.id = ad.id
+		WHERE sur_num not in (SELECT sur_num 
+							FROM survey_participation 
+							WHERE id=#{id})
+		AND s.sur_title LIKE CONCAT('%',#{keyword},'%')					
+		ORDER BY s.sur_num DESC 
+	</select>
+	<select id="selectSurveyPartiList" resultMap="surveyInfoResultMap" parameterType="map">
+		SELECT s.sur_num, s.sur_title, s.reg_date, s.end_date, sp.parti_date, sp.id
+		FROM survey s JOIN survey_participation sp
+		ON s.sur_num = sp.sur_num
+		WHERE sp.id=#{id}
+		AND s.sur_title LIKE CONCAT('%',#{keyword},'%')
+		ORDER BY sp.sur_num DESC;
+	</select>
+	
+	<delete id="deleteSurvey" parameterType="int">
+		DELETE FROM survey WHERE sur_num=#{value}
+	</delete>
+	
+	<select id="selectSurveyLastNum" resultType="int">
+		SELECT MAX(sur_num) FROM survey;
+	</select>
+  
+</mapper>

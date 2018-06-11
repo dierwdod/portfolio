@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myapart.app.dao.MemberDao">
+
+   	<resultMap type="com.myapart.app.model.Member" id="memberResultMap">
+		<id column="id" property="id"/>
+		<result column="password" property="password"/>
+		<result column="name" property="name"/>
+		<result column="birth" property="birth"/>
+		<result column="gender" property="gender"/>
+		<result column="phone" property="phone"/>
+		<result column="dong" property="dong"/>
+		<result column="grade" property="grade"/>
+		<result column="inputdate" property="inputdate"/>
+	</resultMap>
+	
+	<select id="selectMemberList" resultMap="memberResultMap" parameterType="map">
+		SELECT id, name, birth, gender, phone, dong, grade, inputdate
+		FROM member
+		<choose>
+			<when test="option == 'id'">WHERE id LIKE CONCAT('%',#{keyword},'%')</when>
+			<when test="option == 'name'">WHERE name LIKE CONCAT('%',#{keyword},'%')</when>
+			<when test="option == 'birth'">WHERE birth LIKE CONCAT('%',#{keyword},'%')</when>
+			<when test="option == 'phone'">WHERE phone LIKE CONCAT('%',#{keyword},'%')</when>
+			<otherwise></otherwise>
+		</choose>	
+		ORDER BY
+		<choose>
+			<when test="what == 'inputDate'">inputdate </when>
+			<when test="what == 'id'">id </when>
+			<when test="what == 'name'">name </when>
+			<when test="what == 'birth'">birth </when>
+			<when test="what == 'dong'">dong </when>
+		</choose>
+		<choose>
+			<when test="order == 'desc'">DESC</when>
+			<when test="order == 'asc'">ASC</when>
+		</choose>
+	</select>
+	
+	<insert id="insertMember" parameterType="com.myapart.app.model.Member">
+		INSERT INTO member VALUES (#{id},#{password},#{name},#{birth},#{gender},#{phone},#{dong},#{grade},now())
+	</insert>
+	
+	<select id="selectOneAdmin" parameterType="com.myapart.app.model.Member" resultMap="memberResultMap">
+		SELECT id, name, phone, grade
+		FROM admin
+		WHERE id=#{id}
+		AND password=#{password}
+	</select>
+	<select id="selectOneMember" parameterType="com.myapart.app.model.Member" resultMap="memberResultMap">
+		SELECT id, name, birth, gender, phone, dong, grade, inputdate
+		FROM member
+		WHERE id=#{id}
+		AND password=#{password}
+	</select>
+	<select id="memberExist" parameterType="String" resultType="String">
+		SELECT id
+		FROM member
+		WHERE id=#{value}
+	</select>
+	<select id="adminExist" parameterType="String" resultType="String">
+		SELECT id
+		FROM admin
+		WHERE id=#{value}
+	</select>
+	
+	<select id="updateSelectOne" parameterType="String" resultMap="memberResultMap">
+		SELECT id, name, birth, gender, phone, dong, inputdate 
+		FROM member
+		WHERE id=#{id}
+	</select>
+	<update id="updateMember" parameterType="com.myapart.app.model.Member" >
+		UPDATE member SET name=#{name}, phone=#{phone}, dong=#{dong}
+		WHERE id=#{id}
+	</update>
+	<delete id="deleteMember" parameterType="String">
+		DELETE FROM member WHERE id=#{value}
+	</delete>
+</mapper>

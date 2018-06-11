@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.myapart.app.dao.HomeDao">
+
+	<resultMap type="com.myapart.app.model.Home" id="homeResultMap">
+		<id column="not_num" property="notNum"/>
+		<result column="not_title" property="notTitle"/>
+		<result column="shop_num" property="shopNum"/>
+		<result column="shop_title" property="shopTitle"/>
+		<result column="shop_url" property="shopUrl"/>
+	</resultMap>
+	
+	<select id="selectHomeNoticeList" resultMap="homeResultMap">
+		SELECT not_num, not_title 
+		FROM notice
+		ORDER BY not_num DESC
+		LIMIT 0,10;
+	</select>
+	<select id="selectHomeShopList" resultMap="homeResultMap">
+		SELECT shop_url 
+		FROM shop
+		ORDER BY shop_num DESC
+		LIMIT 0,6;
+	</select>
+</mapper>

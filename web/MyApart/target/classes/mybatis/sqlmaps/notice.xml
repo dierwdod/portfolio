@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.myapart.app.dao.NoticeDao">
+	<resultMap type="com.myapart.app.model.Notice" id="noticeResultMap">
+		<id column="not_num" property="notNum" />
+		<result column="id" property="id" />
+		<result column="not_title" property="notTitle" />
+		<result column="not_contents" property="notContents" />
+		<result column="not_date" property="notDate" />
+		<result column="not_count" property="notCount" />
+	</resultMap>
+	
+	<select id="selectNoticeList" parameterType="String" resultMap="noticeResultMap">
+		SELECT not_num, not_title, id, not_date, not_count 
+		FROM notice 
+		WHERE not_title LIKE CONCAT('%',#{keyword},'%')
+		ORDER BY not_num DESC
+	</select>
+
+	<insert id="insertNotice" parameterType="com.myapart.app.model.Notice">
+		INSERT INTO notice VALUES (null,#{notTitle},#{notContents},now(),0,#{id})
+	</insert>
+
+	<select id="selectNoticeOne" parameterType="int" resultMap="noticeResultMap">
+		SELECT not_num,id,not_title,not_contents,not_date,not_count 
+		FROM notice
+		WHERE not_num = #{no}
+	</select>
+
+	<update id="updateNoticeCount" parameterType="com.myapart.app.model.Notice">
+		UPDATE notice SET not_count=#{notCount}
+		WHERE not_num=#{notNum}
+		
+	</update>
+
+	<update id="updateNotice" parameterType="com.myapart.app.model.Notice">
+		UPDATE notice SET
+			id=#{id}, 
+			not_title=#{notTitle},
+			not_contents=#{notContents},
+			not_count=#{notCount}, 
+			not_date=now()
+		WHERE not_num=#{notNum}
+	</update>
+
+	<delete id="deleteNotice" parameterType="int">
+		DELETE FROM notice WHERE not_num=#{no}
+	</delete>
+</mapper>
